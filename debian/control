@@ -1,0 +1,18 @@
+Source: php-league-flysystem
+Section: php
+Priority: optional
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Build-Depends: debhelper-compat (= 13), jq
+Standards-Version: 4.6.2
+Homepage: https://flysystem.thephpleague.com
+Vcs-Git: https://github.com/Vitexus/php-league-flysystem.git
+Rules-Requires-Root: no
+
+Package: php-league-flysystem
+Architecture: all
+Depends: ${misc:Depends}, php-cli | php, composer, php-league-mime-type-detection
+Description: Filesystem abstraction offering one API to many filesystems
+ Flysystem is a filesystem abstraction which allows you to easily swap
+ out a local filesystem for a remote one. It provides a generic API for
+ handling common tasks across multiple file storage engines with
+ consistent output you can rely on.

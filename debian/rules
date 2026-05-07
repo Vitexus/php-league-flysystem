@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+PKG_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/~.*//')
+PKG_SOURCE  := $(shell jq -r '.name' composer.json)
+DESTDIR     := debian/php-league-flysystem/usr/share/php/League/Flysystem
+
+%:
+	dh $@
+
+override_dh_install:
+	mkdir -p $(DESTDIR) $(DESTDIR)/Local $(DESTDIR)/UnixVisibility $(DESTDIR)/UrlGeneration
+	# Install core PHP files (exclude test files)
+	find src/ -maxdepth 1 -name '*.php' ! -name '*Test.php' -exec cp {} $(DESTDIR)/ \;
+	# Install Local adapter
+	find src/Local/ -maxdepth 1 -name '*.php' ! -name '*Test.php' -exec cp {} $(DESTDIR)/Local/ \;
+	# Install UnixVisibility
+	find src/UnixVisibility/ -maxdepth 1 -name '*.php' ! -name '*Test.php' -exec cp {} $(DESTDIR)/UnixVisibility/ \;
+	# Install UrlGeneration
+	find src/UrlGeneration/ -maxdepth 1 -name '*.php' ! -name '*Test.php' -exec cp {} $(DESTDIR)/UrlGeneration/ \;
+	# Install autoload
+	install -m 644 debian/autoload.php $(DESTDIR)/autoload.php
+	sed -i "s|'unknown'|'$(PKG_SOURCE)'|" $(DESTDIR)/autoload.php
+	sed -i "s|'0.0.0'|'$(PKG_VERSION)'|" $(DESTDIR)/autoload.php
